@@ -22,13 +22,17 @@
                
                 <div class="d-flex">
                   <!--<input id=srch class="form-control me-2" type="search" placeholder="Введите фразу" value=''>-->
-                  <button class="btn btn-outline-success" onclick="query()">Обновить</button>
+                  <!--<button class="btn btn-outline-success" onclick="query()">Обновить</button>-->
                 </div>
             </div>
           </nav>
        </div>
        <div class=row>
-            <div class="col-sm-6 order-sm-last"><video id=previewVideo style="width:100%;" class="embed-responsive embed-responsive-16by9" controls></video></div>
+            <div class="col-sm-6 order-sm-last">
+               <img hidden id=previewImg style="width:100%;" class="embed-responsive embed-responsive-16by9" />
+               <video hidden id=previewVideo style="width:100%;" class="embed-responsive embed-responsive-16by9" controls></video>
+               <iframe hidden id=previewIframe style="width:100%; height:100%;" class="embed-responsive embed-responsive-16by9" ></iframe>
+            </div>
             <div class="col-sm-6 ">
                <div id="example-table" ></div>
             </div>
@@ -37,38 +41,48 @@
     
     
    <script>
-          /**
-       *
-       */
-        function fileExists(url) {
-            var http = new XMLHttpRequest();
-           
-            if (url.length === 0) {
-                return false;
-            } else {
-                try{
-                http.open('HEAD', url,false);
-                http.send();
-                return (http.status === 200);
-                }catch(e){
-                    console.log(e);
-                    return (http.status === 200);
-                }
-            }
-            return false;
-        }
+    /**
+    *
+    */
+     function fileExists(url) {
+         var http = new XMLHttpRequest();
         
-        /**
-       *
-       */
-       function getFilePath(filename){
-           const proxyFolder = 'https://archive.derevni-sela.ru/uploads/proxy/';
-           const cloudFolder = 'https://archive.derevni-sela.ru/uploads/';
+         if (url.length === 0) {
+             return false;
+         } else {
+             try{
+             http.open('HEAD', url,false);
+             http.send();
+             return (http.status === 200);
+             }catch(e){
+                 console.log(e);
+                 return (http.status === 200);
+             }
+         }
+         return false;
+     }
         
-           if (fileExists(proxyFolder + filename)) {return proxyFolder + filename;}
-           return cloudFolder + filename;
-       }
-   
+    /**
+    * Возвращает путь на обльшой файл или на прокси, в зависимости от наличия прокси.
+    */
+    function getFilePath(filename){
+        const proxyFolder = 'https://archive.derevni-sela.ru/uploads/proxy/';
+        const cloudFolder = 'https://archive.derevni-sela.ru/uploads/';
+     
+        if (fileExists(proxyFolder + filename)) {return proxyFolder + filename;}
+        return cloudFolder + filename;
+    }
+       
+   /**
+   * Определяем расширение файла
+   */
+   function getUrlExtention( url ) {
+      return url.split(/[#?]/)[0].split('.').pop().trim().toLowerCase();
+   }
+      
+   /**
+   * MAIN
+   */
    var file_id = <?php echo $_GET['file_id'];?>;
    var http = new XMLHttpRequest();
     var q = 'SELECT path FROM files WHERE id ='+file_id;
@@ -77,8 +91,33 @@
     http.onload = function(res){
        let fname = JSON.parse(http.response);
        let path = getFilePath(fname[0]['path'].replace(/^.*[\\\/]/, ''));
-       console.log(path);
-       previewVideo.src = path;
+       
+       let ext = getUrlExtention(path);
+       console.log(ext);
+       switch(ext){
+          case 'mkv':
+          case 'mov':
+          case 'wav':
+          case 'aac':
+          case 'mp3':
+          case 'mp4': 
+            previewVideo.src = path; 
+            previewVideo.hidden = false;
+            break;
+          case 'gif':
+          case 'bmp':
+          case 'svg':
+          case 'png':
+          case 'tif':
+          case 'jpg':
+            previewImg.src = path;
+            previewImg.hidden = false;
+            break;
+          default:
+            previewIframe.src = path;
+            previewIframe.hidden = false;
+       } 
+       
     };
    
     
@@ -92,9 +131,24 @@
          ajaxContentType:"json",
          ajaxURL:"server/sqlClient.php?q="+quer,
          columns:[
-             {title:"Время", field:"start_time", width:"10%", formatter:"plaintext"},
-             {title:"Тэги", field:"tags", width:"15%", formatter:"plaintext"},
-             {title:"Описание", field:"describtion", width:"70%", formatter:"textarea"},
+             {title:"Время", field:"start_time", width:"80", 
+             cellClick: 
+               function(e, cell){
+                   let timeStr = cell.getRow().getData().start_time;
+                   let timeSec = 0;
+                   let timeArr = timeStr.split(':');
+                   timeSec = (parseInt(timeArr[0])*60*60 + parseInt(timeArr[1])*60 + parseInt(timeArr[2]));
+                   console.log("Посмотреть: ", timeArr, timeSec); 
+                   previewVideo.currentTime = timeSec;
+                   previewVideo.play();
+               },
+             formatter:
+               function(cell){
+                  return '<button class="btn btn-outline-secondary btn-sm">'+cell.getValue()+' </button>'
+               }
+             },
+             {title:"Тэги", field:"tags", widthGrow:1, formatter:"textarea"},
+             {title:"Описание", field:"describtion", widthGrow:2, formatter:"textarea"},
          ]
       });
      

@@ -18,20 +18,22 @@ if (check_auth()) {
 </head>
 <body class=container> 
    
-   <h1 class="mb-5">Вход</h1>
+   <h1 class="mb-3">Вход</h1>
 
-   <form method="post" action="do_login.php">
-       <div class="mb-3">
+   <form method="post" action="do_login.php" >
+
+       <div  class="mb-3">
            <label for="username" class="form-label">Логин</label>
            <input id="username" type="text" class="form-control"  name="username" required>
        </div>
-       <div class="mb-3">
+       <div  class="mb-3">
            <label for="password" class="form-label">Пароль</label>
            <input id="password" type="password" class="form-control"  name="password" required>
        </div>
        <div class="d-flex justify-content-between">
            <button type="submit" class="btn btn-primary">Войти</button>
            <!--<a class="btn btn-outline-primary" href="index.php">Регистрация</a>-->
+       </div>
        </div>
    </form>
    

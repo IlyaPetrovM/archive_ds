@@ -5,9 +5,11 @@
 ?>
 <html>
 <head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"> 
-   <link href="dist/css/tabulator.min.css" rel="stylesheet">
-   <script type="text/javascript" src="dist/js/tabulator.min.js"></script>
+    <link href="dist/css/tabulator.min.css" rel="stylesheet">
+   <script type="text/javascript" src="dist/js/tabulator.min.js"></script> 
+   
     <script src="https://cdn.jsdelivr.net/npm/luxon@3.0.1/build/global/luxon.min.js"></script>
 
 </head>
@@ -27,12 +29,12 @@
             </div>
           </nav>
        </div>
-       <div class=row>
-     
+       
+       <div class='row'>
             <div  class="col">
-               <div id="example-table" class="embed-responsive embed-responsive-16by9">
+               <div id="example-table" class="embed-responsive embed-responsive-16by9"></div>
             </div>
-         </div>
+        </div>
     </div>
 </body>
     
@@ -40,12 +42,15 @@
    <script>
    const icon_download = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M7.47 10.78a.75.75 0 001.06 0l3.75-3.75a.75.75 0 00-1.06-1.06L8.75 8.44V1.75a.75.75 0 00-1.5 0v6.69L4.78 5.97a.75.75 0 00-1.06 1.06l3.75 3.75zM3.75 13a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5z"></path></svg>';
    
-   const icon_comment = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M16 1.25v4.146a.25.25 0 01-.427.177L14.03 4.03l-3.75 3.75a.75.75 0 11-1.06-1.06l3.75-3.75-1.543-1.543A.25.25 0 0111.604 1h4.146a.25.25 0 01.25.25zM2.75 3.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h2a.75.75 0 01.75.75v2.19l2.72-2.72a.75.75 0 01.53-.22h4.5a.25.25 0 00.25-.25v-2.5a.75.75 0 111.5 0v2.5A1.75 1.75 0 0113.25 13H9.06l-2.573 2.573A1.457 1.457 0 014 14.543V13H2.75A1.75 1.75 0 011 11.25v-7.5C1 2.784 1.784 2 2.75 2h5.5a.75.75 0 010 1.5h-5.5z"></path></svg>';
-   
-       /**
-       *
-       */
-        function fileExists(url) {
+   const icon_comment = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M10.25 2a8.25 8.25 0 105.28 14.59l5.69 5.69a.75.75 0 101.06-1.06l-5.69-5.69A8.25 8.25 0 0010.25 2zM3.5 10.25a6.75 6.75 0 1113.5 0 6.75 6.75 0 01-13.5 0z"></path></svg>';
+   const icon_play = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M9.5 15.584V8.416a.5.5 0 01.77-.42l5.576 3.583a.5.5 0 010 .842l-5.576 3.584a.5.5 0 01-.77-.42z"></path><path fill-rule="evenodd" d="M12 2.5a9.5 9.5 0 100 19 9.5 9.5 0 000-19zM1 12C1 5.925 5.925 1 12 1s11 4.925 11 11-4.925 11-11 11S1 18.075 1 12z"></path></svg>';
+       const icon_trash = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M16 1.75V3h5.25a.75.75 0 010 1.5H2.75a.75.75 0 010-1.5H8V1.75C8 .784 8.784 0 9.75 0h4.5C15.216 0 16 .784 16 1.75zm-6.5 0a.25.25 0 01.25-.25h4.5a.25.25 0 01.25.25V3h-5V1.75z"></path><path d="M4.997 6.178a.75.75 0 10-1.493.144L4.916 20.92a1.75 1.75 0 001.742 1.58h10.684a1.75 1.75 0 001.742-1.581l1.413-14.597a.75.75 0 00-1.494-.144l-1.412 14.596a.25.25 0 01-.249.226H6.658a.25.25 0 01-.249-.226L4.997 6.178z"></path><path d="M9.206 7.501a.75.75 0 01.793.705l.5 8.5A.75.75 0 119 16.794l-.5-8.5a.75.75 0 01.705-.793zm6.293.793A.75.75 0 1014 8.206l-.5 8.5a.75.75 0 001.498.088l.5-8.5z"></path></svg>';
+    /**
+     * @brief Проверка существования файла на сервере
+     * @param [in] String url адрес файла на сервере
+     * @return true, если файл существует, иначе false.
+     */  
+       function fileExists(url) {
             var http = new XMLHttpRequest();
            
             if (url.length === 0) {
@@ -66,11 +71,11 @@
         /**
        *
        */
-       function getFilePath(filename){
+       function getFilePath(filename, useProxy){
            const proxyFolder = 'https://archive.derevni-sela.ru/uploads/proxy/';
            const cloudFolder = 'https://archive.derevni-sela.ru/uploads/';
         
-           if (fileExists(proxyFolder + filename)) {return proxyFolder + filename;}
+           if (useProxy && fileExists(proxyFolder + filename)) {return proxyFolder + filename;}
            return cloudFolder + filename;
        }
        
@@ -86,7 +91,7 @@
        }
        
       /**
-       * MAIN CODE
+       * MAIN CODE -  начало основного кода
        */
       var quer1 = "SELECT f.id AS id, f.path AS path, f.tags AS tags," +
                "GROUP_CONCAT( CONCAT( inf.last_name,' ', inf.first_name,' ', inf.middle_name ) separator '; ') AS informants, "+
@@ -101,6 +106,63 @@
                        " LEFT JOIN marks m ON (m.file_id = f.id) ) "+
             " GROUP BY f.id "+
            " ORDER BY  f.id DESC";
+           
+    /* 
+    * Создание редактора даты
+    * cell - the cell component for the editable cell
+    * onRendered - function to call when the editor has been rendered
+    * success - function to call to pass thesuccessfully updated value to Tabulator
+    * cancel - function to call to abort the edit and return to a normal cell
+    */
+   var dateEditor = function(cell, onRendered, success, cancel){
+       //create and style input
+       var cellValue = cell.getValue(); //uxon.DateTime.fromFormat(cell.getValue(), "YYYY-MM-DD hh:mm:ss").toFormat("YYYY-MM-DD hh:mm:ss"),
+       input = document.createElement("input");
+       //console.log(cell.getValue(),cellValue);
+
+       input.setAttribute("type", "datetime-local");
+
+       input.style.padding = "4px";
+       input.style.width = "100%";
+       input.style.boxSizing = "border-box";
+
+       input.value = cellValue;
+
+       onRendered(function(){
+           input.focus();
+           input.style.height = "100%";
+       });
+
+       function onChange(){
+          let fmt = luxon.DateTime.fromISO(input.value).toFormat("yyyy-MM-dd HH:mm:ss");
+          console.log( cell.getValue(), 
+                       input.value, 
+                       fmt);
+           if(input.value != cellValue){
+               success(fmt); //luxon.DateTime.fromFormat(input.value, "YYYY-MM-DDThh:mm").toFormat("YYYY-MM-DD hh:mm:ss")
+           }else{
+               cancel();
+           }
+       }
+
+       //submit new value on blur or change
+       input.addEventListener("blur", onChange);
+
+       //submit new value on enter
+       input.addEventListener("keydown", function(e){
+           if(e.keyCode == 13){
+               onChange();
+           }
+
+           if(e.keyCode == 27){
+               cancel();
+           }
+       });
+
+       return input;
+   };
+   
+   
       var table = new Tabulator("#example-table", {
          height:"800px",
          layout:"fitColumns",
@@ -111,35 +173,81 @@
          ajaxContentType:"json",
          layout:"fitColumns",
            columns:[
-              {formatter:function(){return icon_download;}, 
-                  width:"20", 
-                  hozAlign:"center",  
-                     cellClick:function(e, cell){ 
-                        openFile(e, cell.getRow().getData().path.replace(/^.*[\\\/]/, ''));
-                        console.log("Посмотреть",cell.getRow().getData()); 
-                     } 
+              {title: "Просмотр",
+                  formatter:function(){return icon_play;}, 
+                  width:     "20", 
+                  hozAlign:  "center",  
+                  cellClick: function(e, cell){ openFile(e, cell.getRow().getData().path.replace(/^.*[\\\/]/, '', true));} 
                },
-               {title:"Опись по времени", field:"marks",  width:'20', hozAlign:"center",
-                     formatter:function(){return icon_comment;}, 
-                     cellClick:function(e, cell){ 
-                        console.log("Опись", cell.getRow().getData()); 
-                        window.open('marks.php?file_id='+cell.getRow().getData().id);
-                      }
+               {title: "Опись", 
+                     field:     "marks",  
+                     width:     '20', 
+                     hozAlign:  "center",
+                     formatter: function(){ return icon_comment; }, 
+                     cellClick: function(e, cell){ window.open('marks.php?file_id='+cell.getRow().getData().id); }
                },
-               {title:"id", field:"id", width:"100", formatter:"plaintext", hozAlign:"center" },
-               {title:"Путь", field:"path", formatter:"plaintext", hozAlign:"right" },
-               {title:"Тэги", field:"tags", formatter:"textarea"},
-               {title:"Информанты", field:"informants",  formatter:"plaintext"},
-               {title:"Оператор", field:"author", formatter:"plaintext"},
-               {title:"Дата создания", field:"date_created", width:"100",  hozAlign:"center",  formatter:"datetime", formatterParams:{ outputFormat:"dd MMM HH:mm"}},
-               {title:"Дата редактирования", field:"date_updated", width:"100",   hozAlign:"center", formatter:"datetime", formatterParams:{ outputFormat:"dd MMM HH:mm"}},
-               {title:"Старое название", field:"old_filename",   formatter:"plaintext"},
-               {title:"Кто загрузил", field:"who_created",   formatter:"plaintext"},
-               {formatter:"buttonCross", width:"50", hozAlign:"center",  cellClick:function(e, cell){ console.log(cell._cell.row.data); } }
+               {title:"id",            
+                     field:"id",          
+                     formatter:"plaintext", 
+                     width:"100", 
+                     hozAlign:"center",    
+               },
+               {title:"Путь",          
+                     field:      "path",        
+                     formatter:  "plaintext", 
+                     hozAlign:   "right" 
+               },
+               {title:"Тэги",          
+                     field:      "tags",        
+                     formatter:  "textarea",  
+                     editor:     "textarea"
+                     },
+               {title:"Информанты",    
+                     field:      "informants",  
+                     formatter:  "plaintext" 
+                     },
+               {title:"Оператор",      
+                     field:      "author",      
+                     formatter:  "plaintext", 
+                     editor:     "input"
+                     },
+               {title:"Дата создания", 
+                     field:      "date_created", 
+                     formatter:  "datetime", 
+                     width:      "100", 
+                     hozAlign:   "center",  
+                     formatterParams:{ outputFormat:"dd MMM HH:mm"}, 
+                     editor:     dateEditor, 
+                     cellEdited: function(cell){
+                        let q = `UPDATE files SET date_created='${cell.getValue()}' WHERE id=${cell.getRow().getData().id}`;
+                        console.log("edited:", q);
+                     }
+               },
+              
+               {title:"Дата редактирования", field:"date_updated", formatter:"datetime", width:"100", hozAlign:"center", formatterParams:{ outputFormat:"dd MMM HH:mm" }},
+               {title:"Старое название",     field:"old_filename", formatter:"plaintext" },
+               {title:"Кто загрузил",        field:"who_created",  formatter:"plaintext" },
+            {title: "Скачать оригинал",
+                  formatter:function(){return icon_download;}, 
+                  width:     "20", 
+                  hozAlign:  "center",  
+                  cellClick: function(e, cell){ openFile(e, cell.getRow().getData().path.replace(/^.*[\\\/]/, '', false));} 
+               },
+               {formatter:function(){return icon_trash;}, 
+                  width:"50", 
+                  hozAlign:"center", 
+                  cellClick:function(e, cell){ console.log(cell._cell.row.data); } 
+               }
            ]
       });
-
-      function query(str) {
+       
+       srch.addEventListener('keydown', function(e){ if (e.code == 'Enter') srch.blur(), query();  });
+      
+       /**
+        * @brief Запрос к БД. 
+        * @return Обновляет таблицу на странице.
+        */
+       function query() {
          var having = "";
          if (srch.value != "") {
             having = " HAVING (tags LIKE '%"+srch.value+"%' OR marks LIKE '%"+srch.value+"%' OR informants LIKE '%"+srch.value+"%'  ) ";
@@ -160,5 +268,7 @@
                     " ORDER BY  f.id DESC";
          table.setData("server/sqlClient.php?q="+quer);
       }
+      
+    
    </script>
 </html>

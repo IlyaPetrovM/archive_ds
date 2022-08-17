@@ -11,34 +11,36 @@
 
 </head>
 <body> 
-<div class="container-fluid">
-      <div class=row>
-          <nav class="navbar navbar-expand-lg navbar-light bg-light">
-             <div class="container-fluid">
-               <a class="navbar-brand">Архив экспедиции</a>
-               
-               <?php include 'menu.php'; ?> 
-               
-                <div class="d-flex">
-                  <input id=srch class="form-control me-2" type="search" placeholder="Введите фразу" value=''>
-                  <button class="btn btn-outline-success" onclick="query()">Поиск</button>
+    <div class="container-fluid">
+          <div class=row>
+              <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                 <div class="container-fluid">
+                   <a class="navbar-brand">Архив экспедиции</a>
+
+                   <?php include 'menu.php'; ?> 
+
+                    <div class="d-flex">
+                      <input id=srch class="form-control me-2" type="search" placeholder="Введите фразу" value=''>
+                      <button class="btn btn-outline-success" onclick="query()">Поиск</button>
+                    </div>
                 </div>
-            </div>
-          </nav>
-       </div>
-       <div class=row>
-            <div id="example-table" class="col"></div>
-            <!--<div class="col-sm-2">Предпросмотр</div>-->
-         </div>
+              </nav>
+           </div>
+           <div class=row>
+                <div id="example-table" class="col"></div>
+                <!--<div class="col-sm-2">Предпросмотр</div>-->
+             </div>
+        </div>
 </body>
     
     
    <script>
+       srch.addEventListener('keydown', function(e){ if (e.code == 'Enter') srch.blur(), query();  });
     
       var table = new Tabulator("#example-table", {
          height:"calc(100% - 120px)",
          layout:"fitColumns",
-         placeholder:"No Data Set",
+         placeholder:"Введите фразу для поиска",
          autoColumns:true,
          ajaxConfig:"POST", //ajax HTTP request type
          ajaxContentType:"json",
@@ -47,7 +49,7 @@
     var search_str = '';
    
       function query(str) {
-        search_str = search_input.value;
+        search_str = srch.value;
          var quer = "(SELECT `f`.`id` AS `id` , 'files' AS `Таблица`, f.path,  CAST(`f`.`date_created` AS CHAR(255) CHARSET utf8mb4) AS `Время начала`, f.tags As `Описание файла`, ' ' AS `Описание` , f.`кто загрузил` " + 
                         " FROM `files_ext` as `f` " + 
                         " WHERE `f`.`tags` LIKE '%" + search_str + "%' OR `f`.`Информанты` LIKE '%" + search_str + "%') " + 

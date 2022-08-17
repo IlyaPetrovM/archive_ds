@@ -2,10 +2,7 @@
 
 require_once __DIR__.'/boot.php';
 
-if (check_auth()) {
-    header('Location: /');
-    die;
-}
+
 ?>
 
 <html>
@@ -23,7 +20,7 @@ if (check_auth()) {
    <form method="post" action="do_login.php" >
 
        <div  class="mb-3">
-           <label for="username" class="form-label">Логин</label>
+           <label for="username" class="form-label">e-mail</label>
            <input id="username" type="text" class="form-control"  name="username" required>
        </div>
        <div  class="mb-3">
@@ -32,9 +29,9 @@ if (check_auth()) {
        </div>
        <div class="d-flex justify-content-between">
            <button type="submit" class="btn btn-primary">Войти</button>
-           <!--<a class="btn btn-outline-primary" href="index.php">Регистрация</a>-->
+           <a class="btn btn-outline-primary" href="lostpassword.php">Я забыл(а) пароль</a>
        </div>
-       </div>
+       
    </form>
    
    

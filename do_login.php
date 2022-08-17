@@ -1,21 +1,38 @@
 
 <?php
    require_once __DIR__.'/boot.php';
-   $config = include __DIR__.'/config.php'; 
-   
-echo 'usr: '.$_POST['username'];
-echo 'psv: '.$_POST['password'];
+   $config = include __DIR__.'/server/config.php'; 
 
-if ($_POST['password'] == $config['db_pass'] && $_POST['username'] == $config['db_user']){
-   
-    $_SESSION['username'] = $_POST['username'];
-    header('Location: /');
-    die;
-}else{
-   echo 'пароль неверен';
-   header('Location: login.php');
-   
-}
+    $con = new mysqli($config['db_host'], 
+                     $config['db_user'], 
+                     $config['db_pass'], 
+                     $config['db_name']);
+    $pass = '';
+$res_arr = Array();
+    $result = $con->query("SELECT pass,email FROM users WHERE email like '". $_POST['username'] . "' LIMIT 1;");
+    if($result) {
+        $res_arr = $result->fetch_array();
+        if($res_arr['email'] == $_POST['username']) echo 'Пользователя нашли. ';
+        else echo 'Пользователь с почтой '. $res_arr['email'] .' не найден. <a href="login.php">Попробовать снова</a>.';
+        $pass  = $res_arr['pass'];
+        if (password_verify($_POST['password'], $pass)){
+            $_SESSION['username'] = $_POST['username'];
+            echo 'Пароль введён верно! ';
+            header('Location: /');
+            die;
+        }else{
+           echo '<br>Пароль неверен. Попробуйте <a href="login.php">ещё раз</a>';
+           //header('Location: login.php');
+        }
+    }
+    else {
+        echo '<br> Возникла ошибка. Обратитесь к администратору сайта. <a href="login.php">Попробовать снова</a>';
+        //header('Location: /login.php');
+        //die;
+    }
+    
 
 
+
+mysqli_close($con);
 ?>

@@ -1,4 +1,4 @@
-/# archive_ds
+# archive_ds
 
 Веб-версия программы exelOpis
 

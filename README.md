@@ -1,3 +1,6 @@
+> # Разработка программы остановлена 
+> Доступна новая веб-версия: [mediArch](https://github.com/IlyaPetrovM/mediArch)
+
 # archive_ds
 
 Веб-версия программы exelOpis
